@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Virtual Browser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f2f5;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .profile-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .button {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background: #1557b0;
+    }
+    .sync-controls {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e8f0fe;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Virtual Browser Manager</h1>
+    
+    <div class="profile-card">
+      <h2>创建新实例</h2>
+      <button class="button" onclick="createInstance()">启动新浏览器</button>
+      
+      <div class="sync-controls">
+        <h3>同步控制</h3>
+        <label>
+          <input type="checkbox" id="syncMouse" checked> 同步鼠标
+        </label>
+        <br>
+        <label>
+          <input type="checkbox" id="syncKeyboard" checked> 同步键盘
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    function createInstance() {
+      const profileData = {
+        syncMouse: document.getElementById('syncMouse').checked,
+        syncKeyboard: document.getElementById('syncKeyboard').checked
+      };
+      ipcRenderer.send('create-browser-instance', profileData);
+    }
+  </script>
+</body>
+</html>

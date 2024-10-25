@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Virtual Browser Instance</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    webview {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <webview src="https://google.com" nodeintegration></webview>
+  
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const webview = document.querySelector('webview');
+      
+      // 监听鼠标事件
+      document.addEventListener('mousemove', (e) => {
+        ipcRenderer.send('mouse-move', { x: e.screenX, y: e.screenY });
+      });
+      
+      document.addEventListener('click', (e) => {
+        ipcRenderer.send('mouse-click', { 
+          button: e.button === 0 ? 'left' : 'right',
+          double: e.detail === 2
+        });
+      });
+      
+      // 监听键盘事件
+      document.addEventListener('keydown', (e) => {
+        ipcRenderer.send('key-press', {
+          key: e.key,
+          modifier: e.ctrlKey ? 'control' : e.shiftKey ? 'shift' : null
+        });
+      });
+    });
+  </script>
+</body>
+</html>
